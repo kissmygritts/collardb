@@ -1,0 +1,6 @@
+id,animal_id,name,sex,age_class,species
+1,F09,Daniela,f,adult,roe deer
+2,M03,Agostino,m,adult,roe deer
+3,M06,Sandro,m,adult,roe deer
+4,F10,Alessandra,f,adult,roe deer
+5,M10,Decimo,m,adult,roe deer

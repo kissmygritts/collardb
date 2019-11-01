@@ -1,0 +1,6 @@
+animal_id,name,sex,age_class,species,start_time,end_time,notes,sensor_id,purchase_date,frequency,vendor,model,sim
+F09,Daniela,f,adult,roe deer,2005-10-16 16:00:00 +0,2006-10-29 13:00:00 +0,End of batettery life. Sensor not recovered.,GSM01512,2005-07-01,151.089,Vectronic Aerospace GmbH,GPS Plus 1D,393381564898
+M03,Agostino,m,adult,roe deer,2005-03-20 16:03:14 +0,2006-05-27 17:00:00 +0,End of batettery life. Sensor not recovered.,GSM01438,2005-01-18,151.33,Vectronic Aerospace GmbH,GPS Plus 1D,393331594557
+M06,Sandro,m,adult,roe deer,2005-10-23 20:00:53 +0,2006-10-28 13:00:00 +0,Death of animal. Sensor recovered.,GSM01508,2005-07-01,151.01,Vectronic Aerospace GmbH,GPS Plus 1D,393336054578
+F10,Alessandra,f,adult,roe deer,2005-10-21 20:00:47 +0,2007-02-09 09:00:00 +0,End of batettery life. Sensor not recovered.,GSM01511,2005-07-01,151.07,Vectronic Aerospace GmbH,GPS Plus 1D,393381555042
+M10,Decimo,m,adult,roe deer,2006-11-12 12:00:00 +0,2008-03-15 09:00:00 +0,End of batettery life. Sensor not recovered.,GSM02927,2006-11-06,151.145,Vectronic Aerospace GmbH,GPS Plus 1D,393345750791
