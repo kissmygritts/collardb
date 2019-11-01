@@ -11,10 +11,10 @@
 #'
 #' @examples
 #' \donttest{
-#' bootstrap_collarsdb()
+#' collardb_bootstrap()
 #' }
 
-bootstrap_collarsdb <- function (dirpath = '~/.collardb', dbname = 'collardb.sqlite3') {
+collardb_bootstrap <- function (dirpath = '~/.collardb', dbname = 'collardb.sqlite3') {
   fullpath <- paste(dirpath, dbname, sep = '/')
 
   # create collarsdb directory ----
@@ -42,13 +42,3 @@ bootstrap_collarsdb <- function (dirpath = '~/.collardb', dbname = 'collardb.sql
   ## disconnect
   DBI::dbDisconnect(db_conn)
 }
-
-# delete_telemetr <- function (db_path = '~/.telemetr/telemetr-db.sqlite3', force = FALSE) {
-#   if (force) {
-#     file.remove(db_path)
-#   } else {
-#     warning('you must explicitly force deletion for safety')
-#   }
-# }
-#
-# # delete_telemetr(force = T)

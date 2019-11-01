@@ -11,7 +11,7 @@
 #' delete_collardb(force = T)
 #' }
 
-delete_collardb <- function (dirpath = '~/.collardb', force = FALSE) {
+collardb_delete <- function (dirpath = '~/.collardb', force = FALSE) {
   if (force) {
     fs::dir_delete(dirpath)
   } else {
