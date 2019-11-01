@@ -1,4 +1,20 @@
-bootstrap_collarsdb <- function (dirpath = '~/.collarsdb', dbname = 'collarsdb.sqlite3') {
+#' Bootstrap the collardb database
+#'
+#' Create the collardb database. This function creates the tables,
+#' views, etc. required to efficiently manage GPS telemetry data
+#'
+#' @param dirpath character
+#' @param dbname character
+#'
+#' @return null
+#' @export
+#'
+#' @examples
+#' \donttest{
+#' bootstrap_collarsdb()
+#' }
+
+bootstrap_collarsdb <- function (dirpath = '~/.collardb', dbname = 'collardb.sqlite3') {
   fullpath <- paste(dirpath, dbname, sep = '/')
 
   # create collarsdb directory ----
