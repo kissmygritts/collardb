@@ -1,0 +1,19 @@
+Package: collardb
+Title: A database interface and utilities for managing GPS telemetry data
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Mitchell",
+           family = "Gritts",
+           role = c("aut", "cre"),
+           email = "mitchellgritts@pm.me")
+Description: Provides a database for managing GPS telemetry data, with utility
+  functions to assist with GPS telemetry data management.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    DBI,
+    RSQLite,
+    fs,
+    readr,
+    stringr
