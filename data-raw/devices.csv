@@ -1,0 +1,6 @@
+id,sensor_id,purchase_date,frequency,vendor,model,sim
+1,GSM01438,2005-01-18,151.33,Vectronic Aerospace GmbH,GPS Plus 1D,393331594557
+2,GSM01508,2005-07-01,151.01,Vectronic Aerospace GmbH,GPS Plus 1D,393336054578
+3,GSM01511,2005-07-01,151.07,Vectronic Aerospace GmbH,GPS Plus 1D,393381555042
+4,GSM01512,2005-07-01,151.089,Vectronic Aerospace GmbH,GPS Plus 1D,393381564898
+5,GSM02927,2006-11-06,151.145,Vectronic Aerospace GmbH,GPS Plus 1D,393345750791

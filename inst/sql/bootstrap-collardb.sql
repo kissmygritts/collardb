@@ -1,14 +1,17 @@
 create table devices (
   id integer primary key autoincrement,
   serial_number text not null,
+  purchase_date date,
   frequency text,
   vendor text,
+  model text,
   network text
 );
 
 create table animals (
   id integer primary key autoincrement,
   animal_id text not null,
+  name text,
   species text,
   study text,
   sex text,
@@ -26,7 +29,7 @@ create table deployments (
 create table telemetry (
   id integer primary key autoincrement,
   animal_fk integer references animals(id),
-  deployments_fk integer references deployments(id),
+  device_fk integer references devices(id),
   acq_timestamp timestamp,
   x real,
   y real

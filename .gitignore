@@ -75,3 +75,5 @@ vignettes/*.pdf
 /*_files/
 
 # End of https://www.gitignore.io/api/r,macos
+data-raw/tracking_db
+data-raw/trackingdb_datasets.zip

@@ -1,6 +1,6 @@
-id,animal_id,name,sex,age_class,species
-1,F09,Daniela,f,adult,roe deer
-2,M03,Agostino,m,adult,roe deer
-3,M06,Sandro,m,adult,roe deer
-4,F10,Alessandra,f,adult,roe deer
-5,M10,Decimo,m,adult,roe deer
+animal_id,name,sex,age_class,species,inservice,outservice,notes,serial_num
+F09,Daniela,f,adult,roe deer,2005-10-16,2006-10-29,End of batettery life. Sensor not recovered.,GSM01512
+M03,Agostino,m,adult,roe deer,2005-03-20,2006-05-27,End of batettery life. Sensor not recovered.,GSM01438
+M06,Sandro,m,adult,roe deer,2005-10-23,2006-10-28,Death of animal. Sensor recovered.,GSM01508
+F10,Alessandra,f,adult,roe deer,2005-10-21,2007-02-09,End of batettery life. Sensor not recovered.,GSM01511
+M10,Decimo,m,adult,roe deer,2006-11-12,2008-03-15,End of batettery life. Sensor not recovered.,GSM02927
