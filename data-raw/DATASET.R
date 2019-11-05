@@ -46,7 +46,7 @@ dat$outservice <- lubridate::as_date(
 )
 
 readr::write_csv(dat, here::here('data-raw', 'animals.csv'))
-readr::write_csv(devices, here::here('data-raw', 'devices.csv'))
+readr::write_csv(devices[, 2:6], here::here('data-raw', 'devices.csv'))
 
 # save files to package ----
 usethis::use_data("DATASET")
