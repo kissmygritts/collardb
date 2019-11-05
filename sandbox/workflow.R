@@ -62,7 +62,7 @@ animals_up
 ## and now write to the database this time using the
 ## DBI::dbAppendTable function instead of the write table function
 DBI::dbAppendTable(conn, 'animals', animals_up)
-rm(animals)
+rm(animals_up)
 
 ## read the data from the database
 (db_animals <- DBI::dbReadTable(conn, 'animals'))
@@ -89,4 +89,15 @@ deploys
 DBI::dbAppendTable(conn, 'deployments', deploys)
 
 ## fetch data
-DBI::dbReadTable(conn, 'deployments')
+(db_deploys <- DBI::dbReadTable(conn, 'deployments'))
+
+## unfortunately the dates in SQLite3 are stored as integer, or days from 1970-01-01 (unix epoch)
+## convert with the following
+(db_deploys$inservice <- as.Date(as.numeric(db_deploys$inservice), origin = '1970-01-01'))
+
+### confirm equal
+assertthat::are_equal(deploys$inservice, db_deploys$inservice)
+
+# delete the dataabse ----
+## must forcefully delete the database to avoid accidental deletion
+collardb::collardb_delete(force = T)

@@ -22,8 +22,8 @@ create table deployments (
   id integer primary key autoincrement,
   animal_fk integer references animals(id),
   devices_fk integer references devices(id),
-  inservice date,
-  outservice date
+  inservice text,
+  outservice text
 );
 
 create table telemetry (
