@@ -48,5 +48,34 @@ dat$outservice <- lubridate::as_date(
 readr::write_csv(dat, here::here('data-raw', 'animals.csv'))
 readr::write_csv(devices[, 2:6], here::here('data-raw', 'devices.csv'))
 
+# telemetry data ----
+telemetry_dir <- here::here('data-raw', 'tracking_db', 'data', 'sensors_data')
+!(is.na(stringr::str_extract(dir(telemetry_dir), 'GSM\\d*.csv')))
+
+files <- Filter(x = dir(telemetry_dir),
+       f = function (x) {
+         !(is.na(stringr::str_extract(x, 'GSM\\d*.csv')))
+       })
+
+dat <- Reduce('rbind', lapply(files, function (x) {
+  path <- file.path(telemetry_dir, x)
+  readr::read_delim(path, delim = ';')
+}))
+
+dat_out <- dat[, c(1, 3, 4, 5, 6, 10, 11)]
+names(dat_out) <- c('collar_id', 'utc_date', 'utc_time', 'lmt_date', 'lmt_time', 'y', 'x')
+
+dat_out$acq_timestamp_utc <- lubridate::dmy_hms(paste(
+  dat_out$utc_date, dat_out$utc_time, sep = ' '
+))
+
+dat_out
+
+## figure out what timezone these are in to best set local time
+telemetry_trunc$acq_timestamp_local <- lubridate::ymd_hms(paste(
+  telemetry_trunc$lmt_date, telemetry_trunc$lmt_time, sep = ' '
+), tz = 'LMT')
+head(telemetry_trunc$acq_timestamp_local)
+
 # save files to package ----
 usethis::use_data("DATASET")
