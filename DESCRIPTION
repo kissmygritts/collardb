@@ -16,5 +16,6 @@ Imports:
     RSQLite,
     fs,
     readr,
-    stringr
+    stringr,
+    glue
 RoxygenNote: 6.1.1

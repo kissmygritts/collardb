@@ -1,4 +1,4 @@
-#' Bootstrap the collardb database
+#' Builds the collardb database
 #'
 #' Create the collardb database. This function creates the tables,
 #' views, etc. required to efficiently manage GPS telemetry data
@@ -11,10 +11,10 @@
 #'
 #' @examples
 #' \donttest{
-#' collardb_bootstrap()
+#' build_collardb()
 #' }
 
-collardb_bootstrap <- function (dirpath = '~/.collardb', dbname = 'collardb.sqlite3') {
+build_collardb <- function (dirpath = '~/.collardb', dbname = 'collardb.sqlite3') {
   fullpath <- paste(dirpath, dbname, sep = '/')
 
   # create collarsdb directory ----
