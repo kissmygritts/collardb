@@ -20,8 +20,8 @@ create table animals (
 
 create table deployments (
   id text primary key not null,
-  animal_fk integer references animals(id),
-  devices_fk integer references devices(id),
+  animal_fk text references animals(id),
+  device_fk text references devices(id),
   inservice text,
   outservice text
 );

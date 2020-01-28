@@ -1,3 +1,22 @@
+#' Insert device data into collardb database
+#'
+#' Insert a data.frame, or an object that inherits from a table, int
+#' the collardb SQLite database.
+#'
+#' @param dat data.frame. This data.frame needs to match the following
+#' vector of column names c('serial_number', 'purchase_date', 'frequency', 'vendor', 'model')
+#' @param conn a SQLite database connection. Optional if using the default database connection
+#' parameters. Otherwise provide your own database connection
+#'
+#' @return NULL
+#' @export
+#'
+#' @examples
+#' \donttest{
+#' insert_devices(devices)
+#' }
+#'
+#'
 insert_devices <- function (dat, conn = NULL) {
   # check data.frame ----
   if (!(inherits(dat, 'data.frame'))) {
@@ -30,11 +49,14 @@ insert_devices <- function (dat, conn = NULL) {
   sql <- glue::glue_sql(
     '
     INSERT INTO `devices`
-      (`serial_number`, `purchase_date`, `frequency`, `vendor`, `model`)
+      (`id`, `serial_number`, `purchase_date`, `frequency`, `vendor`, `model`)
     VALUES
-      (:serial_number, :purchase_date, :frequency, :vendor, :model)
+      (:id, :serial_number, :purchase_date, :frequency, :vendor, :model)
     '
   )
+
+  ## add uuid field to input data
+  dat$id <- vapply(seq_len(nrow(dat)), uuid::UUIDgenerate, character(1))
 
   ## send query to database
   res <- DBI::dbSendStatement(conn, sql)
@@ -48,12 +70,3 @@ insert_devices <- function (dat, conn = NULL) {
   ## message, no return value
   message(paste0(rows_appended, ' rows inserted into collardb'))
 }
-
-insert_devices(as.matrix(devices_tbl))
-
-conn <- collardb::collardb_conn()
-
-serial_number <- DBI::dbGetQuery(conn, 'SELECT serial_number FROM devices')
-serial_number
-
-serial_number$serial_number %in% devices$serial_number

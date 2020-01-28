@@ -17,5 +17,6 @@ Imports:
     fs,
     readr,
     stringr,
-    glue
+    glue,
+    uuid
 RoxygenNote: 6.1.1

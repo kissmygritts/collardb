@@ -3,4 +3,5 @@
 export(build_collardb)
 export(collardb_conn)
 export(collardb_delete)
+export(insert_animals)
 export(insert_devices)
