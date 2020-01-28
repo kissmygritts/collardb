@@ -1,5 +1,5 @@
 create table devices (
-  id integer primary key autoincrement,
+  id text primary key not null,
   serial_number text not null,
   purchase_date date,
   frequency text,
@@ -9,17 +9,17 @@ create table devices (
 );
 
 create table animals (
-  id integer primary key autoincrement,
+  id text primary key not null,
   animal_id text not null,
   name text,
   species text,
   study text,
   sex text,
-  age text
+  age_class text
 );
 
 create table deployments (
-  id integer primary key autoincrement,
+  id text primary key not null,
   animal_fk integer references animals(id),
   devices_fk integer references devices(id),
   inservice text,
@@ -27,7 +27,7 @@ create table deployments (
 );
 
 create table telemetry (
-  id integer primary key autoincrement,
+  id text primary key not null,
   animal_fk integer references animals(id),
   device_fk integer references devices(id),
   acq_timestamp timestamp,
