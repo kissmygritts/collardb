@@ -4,7 +4,6 @@ insert_devices <- function (dat, conn = NULL) {
     stop('dat must inherit from a `data.frame`')
   }
   # rename column names, map from input? ----
-  # write data to database ----
 
   ## if conn isnt provided assume default connection
   if (is.null(conn)) {
