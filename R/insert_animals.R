@@ -17,53 +17,69 @@
 #' }
 #'
 insert_animals <- function (dat, conn = NULL) {
-  # dat has deployment data as well
-  # isolate unique animals
-  # check which animals are in the database
-  ## assign animals the id from database
-
   # parameter and data checks ----
-  ## dat is inherits from data.frame
   if (!(inherits(dat, what = 'data.frame'))) {
     stop('dat must inherit from a `data.frame`')
   }
+
+  # check col names ----
+  ## animal columns
+  animal_cols <- c('animal_id', 'name', 'sex', 'age_class', 'species', 'study')
+  # TODO: implement animals columns check
+
+  ## deployment columns
+  deployment_cols <- c('animal_id', 'serial_num', 'inservice', 'outservice')
+  # TODO: implement deploy columns check
 
   ## use default connection in conn is null
   if (is.null(conn)) {
     conn <- collardb::collardb_conn()
   }
 
-  ## check if the animals are already in the database
-  ### get list of animals in database
-  animals <- DBI::dbGetQuery(conn, 'SELECT animal_id FROM animals')
-  animal_ids <- animals$animal_id
+  # check if devices are in the database ----
+  sql <- glue::glue_sql('SELECT id AS device_uuid, serial_number
+                         FROM devices WHERE serial_number in ({vals*})',
+                        vals = dat$serial_num, .con = collardb::collardb_conn())
+  devices_in_db <- DBI::dbGetQuery(collardb::collardb_conn(), sql)
+  serial_number_check <- dat$serial_num %in% devices_in_db$serial_number
 
-  check <- dat$animal_id %in% animal_ids
-  if (all(check)) {
-    ## if animal already exists, throw error with duplicate animals
-    ## no animals will be uploaded to the database
+  if (!(all(serial_number_check))) {
     DBI::dbDisconnect(conn)
-    stop(paste0('animal_id(s) already in database: '),
-         paste0(animal_ids[check], collapse = ', '))
+    stop(paste0('device(s) not in the database, insert devices first: '),
+         paste0(dat$serial_num[!(serial_number_check)], collapse = ', '))
   }
 
-  # format animal data ----
-  dat$id <- vapply(seq_len(nrow(dat)), uuid::UUIDgenerate, character(1))
-  animals_up <- dat[, c('id', 'animal_id', 'name', 'species', 'study', 'sex', 'age_class')]
+  ## merge database ids with dat
+  dat <- merge(dat, devices_in_db, by.x = "serial_num", by.y = 'serial_number')
 
-  # format deployment data ----
-  ## get device_id from database
-  sql <- glue::glue_sql('SELECT id AS device_id FROM devices WHERE serial_number in ({vals*})',
-                        vals = dat$serial_num, .con = collardb::collardb_conn())
-  device_uuid <- DBI::dbGetQuery(collardb::collardb_conn(), sql)
+  # check if any of the animals are in the database ----
+  sql <- glue::glue_sql('SELECT id AS animal_uuid, animal_id
+                         FROM animals WHERE animal_id in ({vals*})',
+                        vals = dat$animal_id, .con = collardb::collardb_conn())
+  animals_in_db <- DBI::dbGetQuery(collardb::collardb_conn(), sql)
 
-  deployments <- cbind(device_uuid, dat[, c('id', 'inservice', 'outservice')])
-  colnames(deployments)[1:2] <- c('device_fk', 'animal_fk')
-  deployments$id <- vapply(seq_len(nrow(deployments)), uuid::UUIDgenerate, character(1))
+  ## merge database animal ids with dat
+  dat <- merge(dat, animals_in_db, by.x = 'animal_id', by.y = 'animal_id', all.x = T)
 
-  # insert ----
-  ## insert animals into collardb
-  sql <- glue::glue_sql(
+  ## should check here for duplicate deployments and warn user
+
+  # format data  ----
+  ## add animal_uuid to rows that need it
+  condition <- is.na(dat$animal_uuid)
+  n <- nrow(dat[condition, ])
+  dat$animal_uuid[condition] <- gen_uuid(n)
+
+  ## format animal data & run insert
+  animals_up <- dat[, c(animal_cols, 'animal_uuid')]
+  colnames(animals_up)[7] <- 'id'
+
+  ## format deployment data & run inserts
+  deployments_up <- dat[, c('animal_uuid', 'device_uuid', 'inservice', 'outservice')]
+  deployments_up$id <- gen_uuid(nrow(deployments_up))
+  colnames(deployments_up) <- c('animal_fk', 'device_fk', 'inservice', 'outservice', 'id')
+
+  # insert data ----
+  animal_sql <- glue::glue_sql(
     '
     INSERT INTO `animals`
       (`id`, `animal_id`, `name`, `species`, `study`, `sex`, `age_class`)
@@ -71,17 +87,7 @@ insert_animals <- function (dat, conn = NULL) {
       (:id, :animal_id, :name, :species, :study, :sex, :age_class)
     '
   )
-
-  ### send query to database
-  res <- DBI::dbSendStatement(conn, sql)
-  DBI::dbBind(res, animals_up)
-
-  ### get number of rows affected
-  # rows_appended <- DBI::dbGetRowsAffected(res)
-  DBI::dbClearResult(res)
-
-  ## insert deployments into collardb
-  sql <- glue::glue_sql(
+  deployment_sql <- glue::glue_sql(
     '
     INSERT INTO `deployments`
       (`id`, `animal_fk`, `device_fk`, `inservice`, `outservice`)
@@ -89,10 +95,20 @@ insert_animals <- function (dat, conn = NULL) {
       (:id, :animal_fk, :device_fk, :inservice, :outservice)
     '
   )
-  res <- DBI::dbSendStatement(conn, sql)
-  DBI::dbBind(res, deployments)
 
-  DBI::dbClearResult(res)
+  DBI::dbBegin(conn)
+
+  res_animal <- DBI::dbSendStatement(conn, animal_sql)
+  DBI::dbBind(res_animal, animals_up)
+  DBI::dbClearResult(res_animal)
+
+  res_deployments <- DBI::dbSendStatement(conn, deployment_sql)
+  DBI::dbBind(res_deployments, deployments_up)
+  DBI::dbClearResult(res_deployments)
+
+  DBI::dbCommit(conn)
+
+  # cleanup connections ----
   DBI::dbDisconnect(conn)
 
   message('succesfully appended animals and deployments to collardb')
