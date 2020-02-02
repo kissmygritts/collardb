@@ -24,3 +24,9 @@ extract_table_from_sql <- function (sql_list) {
   pattern <- 'table (.*) \\('
   stringr::str_match(unlist(sql_list), pattern)[, 2]
 }
+
+# generate vector of uuids
+gen_uuid <- function (n) {
+  v4 <- function (i) uuid::UUIDgenerate(use.time = F)
+  vapply(seq_len(n), v4, character(1))
+}
